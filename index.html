@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAM Eater</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RAM Eater</h1>
+    <label for="ramInput">RAM (in MB):</label>
+    <input type="number" id="ramInput" placeholder="RAM in MB">
+    <br>
+    <button id="startButton">Start</button>
+    <button id="stopButton" disabled>Stop</button>
+    <p id="status">Status: Ready</p>
+
+    <script>
+        let allocatedMemory = [];
+        const ramInput = document.getElementById('ramInput');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const status = document.getElementById('status');
+
+        startButton.addEventListener('click', () => {
+            const ramInMB = parseInt(ramInput.value, 10);
+            if (isNaN(ramInMB) || ramInMB <= 0) {
+                alert('Enter valid size pls.');
+                return;
+            }
+            const ramInBytes = ramInMB * 1024 * 1024;
+
+            try {
+                allocatedMemory.push(new Array(ramInBytes).fill(0)); 
+                status.textContent = `Status: ${ramInMB} MB RAM allocated`;
+                startButton.disabled = true;
+                stopButton.disabled = false;
+            } catch (e) {
+                alert('Can not allocate RAM. Too much RAM provided?');
+                status.textContent = 'Status: Can not allocate RAM';
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            allocatedMemory = []; 
+            status.textContent = 'Status: RAM is free';
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
